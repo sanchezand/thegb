@@ -25,8 +25,11 @@ public:
 	void setFlag(FLAG f, bool set);
 	unsigned char getAddress(int dir);
 	unsigned short getAddress2Bytes(int dir);
+	unsigned char getCurrentInstruction();
 	unsigned char getNextInstruction();
 	unsigned char getNextInstruction(bool increment);
+	unsigned short getNextInstructionPair();
+	unsigned short getNextInstructionPair(bool increment);
 	unsigned short incrementPC();
 	unsigned short incrementPC(int count);
 	
@@ -39,6 +42,9 @@ public:
 	void incrementRegister(REGISTER r, int count);
 	void decrementRegister(REGISTER r);
 	void decrementRegister(REGISTER r, int count);
+	void addRegisters(REGISTER dest, REGISTER adding);
+
+
 
 	void setSP(unsigned short sp);
 	unsigned short jumpPC(unsigned short pc);

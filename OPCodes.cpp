@@ -30,128 +30,91 @@ char op0x00(Boy* gb) {
 
 // LD BC, nn
 char op0x01(Boy* gb) {
-	unsigned short pc = gb->incrementPC();
-	unsigned short n = gb->getAddress2Bytes(pc);
-	pc = gb->incrementPC();
-	gb->setRegisterPair(REG_BC, gb->getAddress2Bytes(n));
+
 	return 12;
 }
 
 // LD (BC), A
 char op0x02(Boy* gb) {
-	gb->setAddress(gb->getRegisterPair(REG_BC), gb->getRegister(REG_A));
+
 	return 8;
 }
 
 // INC BC
 char op0x03(Boy* gb) {
-	gb->incrementRegister(REG_BC);
+
 	return 8;
 }
 
 // INC B
 char op0x04(Boy* gb) {
-	gb->incrementRegister(REG_B);
+
 	return 4;
 }
 
 // DEC B
 char op0x05(Boy* gb) {
-	gb->decrementRegister(REG_B);
+
 	return 4;
 }
 
 // LD B, n
 char op0x06(Boy* gb) {
-	unsigned short pc = gb->incrementPC();
-	unsigned char n = gb->getAddress(pc);
-	gb->setAddress(n, gb->getRegister(REG_B));
+
 	return 8;
 }
 
 // RLCA
 char op0x07(Boy* gb) {
-	unsigned short A = gb->getRegister(REG_A);
-	bool bit = (A >> 0b1000000);
-	gb->setRegister(REG_A, A << 1);
-	//printf("BIT: %i\n\n", bit);
-	//A = (A << 1) | (A << 15);
-	//printBinary(A);
+
 	return 4;
 }
 
 //LD nn,SP
 char op0x08(Boy* gb) {
-	unsigned short pc = gb->incrementPC();
-	unsigned short n = gb->getAddress2Bytes(pc);
 
-	printf("0x08 - N: ");
-	printHex(n);
-
-	gb->setSP(n);
 	return 20;
 }
 
 // ADD HL,BC
 char op0x09(Boy* gb) {
-	unsigned short HL = gb->getRegisterPair(REG_HL);
-	unsigned short BC = gb->getRegisterPair(REG_BC);
-
-	gb->setRegisterPair(REG_HL, HL + BC);
-	gb->setFlag(FLAG_N, false);
-	gb->setFlag(FLAG_C, HL + BC > 0xFFFF);
-	gb->setFlag(FLAG_H, ((HL & 0x0FFF)+(BC & 0x0FFF))>0x0FFF);
-
-	printBinary((unsigned short)(HL & 0x0FFF));
 
 	return 8;
 }
 
 // LD A, (BC)
 char op0x0A(Boy* gb) {
-	gb->setRegister(REG_A, gb->getAddress(gb->getRegister(REG_BC)));
+
 	return 8;
 }
 
 // DEC BC
 char op0x0B(Boy* gb) {
-	gb->decrementRegister(REG_BC);
+
 	return 8;
 }
 
 // INC C
 char op0x0C(Boy* gb) {
-	gb->incrementRegister(REG_C);
+
 	return 4;
 }
 
 // DEC C
 char op0x0D(Boy* gb) {
-	gb->decrementRegister(REG_C);
+
 	return 4;
 }
 
 // LB C, n
 char op0x0E(Boy* gb) {
-	unsigned char pc = gb->incrementPC();
-	unsigned char n = gb->getAddress(pc);
 
-	gb->setAddress(n, gb->getRegister(REG_C));
 	return 8;
 }
 
 // RRCA
 char op0x0F(Boy* gb) {
-	unsigned char A = gb->getRegister(REG_A);
-	bool bit = (A >> 0b0000001);
-	A = A >> 1;
-	gb->setRegister(REG_A, A);
-	gb->setFlag(FLAG_Z, A == 0x00);
-	gb->setFlag(FLAG_N, false);
-	gb->setFlag(FLAG_H, false);
-	gb->setFlag(FLAG_C, bit);
-	
-	// CHECK THIS
+
 	return 4;
 }
 
@@ -162,43 +125,37 @@ char op0x10(Boy* gb) {
 
 // LD DE,nn
 char op0x11(Boy* gb) {
-	unsigned short pc = gb->incrementPC();
-	unsigned short n = gb->getAddress2Bytes(pc);
-	pc = gb->incrementPC();
-	gb->setRegisterPair(REG_DE, gb->getAddress2Bytes(n));
+
 	return 12;
 }
 
 // LD (DE), A
 char op0x12(Boy* gb) {
-	gb->setAddress(gb->getRegisterPair(REG_DE), gb->getRegister(REG_A));
+
 	return 8;
 }
 
 // INC DE
 char op0x13(Boy* gb) {
-	gb->incrementRegister(REG_DE);
+
 	return 8;
 }
 
 // INC D
 char op0x14(Boy* gb) {
-	gb->incrementRegister(REG_D);
+
 	return 4;
 }
 
 // DEC D
 char op0x15(Boy* gb) {
-	gb->decrementRegister(REG_D);
+
 	return 4;
 }
 
 // LD D, n
 char op0x16(Boy* gb) {
-	unsigned char pc = gb->incrementPC();
-	unsigned char n = gb->getAddress(pc);
 
-	gb->setAddress(n, gb->getRegister(REG_D));
 	return 8;
 }
 
@@ -208,49 +165,50 @@ char op0x17(Boy* gb) {
 	return 4;
 }
 
-// 
+// JR n
+// Jump relative
 char op0x18(Boy* gb) {
-
+	
 	return 12;
 }
 
-// 
+// ADD HL, DE
 char op0x19(Boy* gb) {
 
 	return 8;
 }
 
-// 
+// LD A, (DE)
 char op0x1A(Boy* gb) {
 
 	return 8;
 }
 
-// 
+// DEC DE
 char op0x1B(Boy* gb) {
 
 	return 8;
 }
 
-// 
+// INC E
 char op0x1C(Boy* gb) {
 
 	return 4;
 }
 
-// 
+// DEC E
 char op0x1D(Boy* gb) {
 
 	return 4;
 }
 
-// 
+// LD E, n
 char op0x1E(Boy* gb) {
-
+	
 	return 8;
 }
 
-// 
+// RRA
 char op0x1F(Boy* gb) {
 
 	return 4;

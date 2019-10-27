@@ -1,4 +1,5 @@
 #include "Boy.h"
+#include "Util.h"
 #include "OPCodes.h"
 
 void Boy::init(int w, int h){
@@ -9,11 +10,11 @@ void Boy::init(int w, int h){
 }
 
 void Boy::powerUp() {
-	SDL_Init(SDL_INIT_EVERYTHING);
-	this->window = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->w, this->h, SDL_WINDOW_SHOWN);
-	this->renderer = SDL_CreateRenderer(this->window, -1, 0);
+	//SDL_Init(SDL_INIT_EVERYTHING);
+	//this->window = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->w, this->h, SDL_WINDOW_SHOWN);
+	//this->renderer = SDL_CreateRenderer(this->window, -1, 0);
 
-	SDL_RenderPresent(this->renderer);
+	//SDL_RenderPresent(this->renderer);
 
 	memset(this->RAM_BANK1, 0, sizeof(this->RAM_BANK1));
 	memset(this->RAM_BANK2, 0, sizeof(this->RAM_BANK2));
@@ -31,7 +32,7 @@ void Boy::loop() {
 	//	this->tick();
 	//	
 	//}
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 1000; i++) {
 		unsigned char instruction = this->getNextInstruction(false);
 		this->tick();
 	}
@@ -39,7 +40,7 @@ void Boy::loop() {
 
 void Boy::tick() {
 	unsigned char instruction = this->getNextInstruction(false);
-	printf("Exec: 0x%02x\n", instruction);
+	//printf("Exec: 0x%02x\n", instruction);
 	executeCode(this, instruction);
 	this->incrementPC();
 }
@@ -98,6 +99,24 @@ unsigned char Boy::getNextInstruction(bool increment) {
 
 unsigned char Boy::getNextInstruction() {
 	return this->getNextInstruction(true);
+}
+
+unsigned short Boy::getNextInstructionPair(bool increment) {
+	int dir = this->pc + 1;
+	unsigned char hbyte = this->cartridge->getAddress(dir);
+	dir += 1;
+	unsigned char lbyte = this->cartridge->getAddress(dir);
+	if (increment) this->pc = dir;
+
+	return joinBytes(hbyte, lbyte);
+}
+
+unsigned short Boy::getNextInstructionPair() {
+	return this->getNextInstructionPair(true);
+}
+
+unsigned char Boy::getCurrentInstruction() {
+	return this->getAddress(this->pc);
 }
 
 unsigned char Boy::getAddress(int dir) {
@@ -350,4 +369,38 @@ void Boy::incrementRegister(REGISTER r) {
 
 void Boy::decrementRegister(REGISTER r) {
 	this->decrementRegister(r, 1);
+}
+
+void Boy::addRegisters(REGISTER dest, REGISTER adding) {
+	switch (dest) {
+		case REG_AF:
+		case REG_BC:
+		case REG_DE:
+		case REG_HL: {
+			unsigned short d = this->getRegisterPair(dest);
+			unsigned short a = this->getRegisterPair(adding);
+
+			this->setRegisterPair(dest, d + a);
+			this->setFlag(FLAG_N, false);
+			this->setFlag(FLAG_C, d + a > 0xFFFF);
+			this->setFlag(FLAG_H, ((d & 0x0FFF) + (a & 0x0FFF)) > 0x0FFF);
+			break;
+		}
+		default: {
+			unsigned char dc;
+			unsigned char ac = this->getRegister(dest);
+			if (adding == REG_HL) {
+				dc = this->getAddress(this->getRegister(adding));
+			}
+			else {
+				dc = this->getRegister(adding);
+			}
+			this->setRegister(dest, dc + ac);
+			this->setFlag(FLAG_Z, (dc + ac) == 0x00);
+			this->setFlag(FLAG_N, false);
+			this->setFlag(FLAG_H, ((dc & 0x0FFF) + (ac & 0x0FFF)) > 0x0FFF);
+			this->setFlag(FLAG_C, (dc + ac) > 0xFFFF);
+			break;
+		}
+	}
 }

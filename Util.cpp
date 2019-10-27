@@ -20,3 +20,7 @@ void printHex(unsigned char b) {
 void printHex(unsigned short b) {
 	printf("%04x\n", b);
 }
+
+unsigned short joinBytes(unsigned char high, unsigned char low) {
+	return high << 8 | low;
+}
