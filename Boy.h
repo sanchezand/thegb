@@ -35,7 +35,16 @@ public:
 	unsigned short getRegisterPair(REGISTER r);
 	void setRegisterPair(REGISTER r, unsigned short val);
 	void setRegister(REGISTER r, unsigned char val);
+	void incrementRegister(REGISTER r);
+	void incrementRegister(REGISTER r, int count);
+	void decrementRegister(REGISTER r);
+	void decrementRegister(REGISTER r, int count);
+
+	void setSP(unsigned short sp);
 	unsigned short jumpPC(unsigned short pc);
+	unsigned char getAddressRam(unsigned short dir, bool bus);
+	void setAddress(int dir, unsigned char val);
+	void setAddressRam(int dir, unsigned char val);
 
 private:
 	bool running;
@@ -50,4 +59,7 @@ private:
 	unsigned char* getRegisterDir(REGISTER r);
 	Cartridge *cartridge;
 
+	unsigned char RAM_BANK1[4096];
+	unsigned char RAM_BANK2[4096];
+	unsigned char VRAM[8192];
 };

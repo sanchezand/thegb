@@ -3,14 +3,17 @@
 
 typedef char OPCodeFn (Boy* b);
 
-
 struct OPCode {
 	unsigned char code;
 	char cycles;
 };
 
 OPCode executeCode(Boy* gb, unsigned char code);
+OPCodeFn* getOpFunction(unsigned char code);
+
 void populateCodes();
+
+char opDummy(Boy* gb);
 
 char op0x00(Boy* gb);
 char op0x01(Boy* gb);

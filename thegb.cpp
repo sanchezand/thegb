@@ -5,18 +5,6 @@
 
 Boy *boy;
 
-void printBinary(unsigned char b) {
-	char buffer[32];
-	_itoa_s(b, buffer, 2);
-	printf("binary: %s\n", buffer);
-}
-
-void printBinary(unsigned short b) {
-	char buffer[32];
-	_itoa_s(b, buffer, 2);
-	printf("binary: %s\n", buffer);
-}
-
 int main(){
 
 	const char* cartPath = "E:\\Tetris.gb";

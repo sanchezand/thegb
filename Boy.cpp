@@ -15,7 +15,11 @@ void Boy::powerUp() {
 
 	SDL_RenderPresent(this->renderer);
 
-	this->pc = 0x100;
+	memset(this->RAM_BANK1, 0, sizeof(this->RAM_BANK1));
+	memset(this->RAM_BANK2, 0, sizeof(this->RAM_BANK2));
+	memset(this->VRAM, 0, sizeof(this->VRAM));
+
+	this->pc = 0x0FF;
 	this->sp = 0xFFFE;
 
 	this->loop();
@@ -28,13 +32,16 @@ void Boy::loop() {
 	//	
 	//}
 	for (int i = 0; i < 10; i++) {
+		unsigned char instruction = this->getNextInstruction(false);
 		this->tick();
 	}
 }
 
 void Boy::tick() {
-	unsigned char instruction = this->getNextInstruction();
+	unsigned char instruction = this->getNextInstruction(false);
+	printf("Exec: 0x%02x\n", instruction);
 	executeCode(this, instruction);
+	this->incrementPC();
 }
 
 void Boy::handleKey(SDL_KeyboardEvent e) {
@@ -94,33 +101,59 @@ unsigned char Boy::getNextInstruction() {
 }
 
 unsigned char Boy::getAddress(int dir) {
-
-	if (0x0000 < dir && dir < 0x3FFF) { // 16KB ROM BANK 0 (CARTRIDGE)
+	if (0x0000 <= dir && dir <= 0x3FFF) { // 16KB ROM BANK 0 (CARTRIDGE)
 		return cartridge->getAddress(dir);
-	} else if (0x4000 < dir && dir < 0x7FFF) { // 16KB ROM BANK N (CARTRIDGE)
+	} 
+	else if (0x4000 <= dir && dir <= 0x7FFF) { // 16KB ROM BANK N (CARTRIDGE)
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0x8000 < dir && dir < 0x9FFF) { // 8KB VRAM
+	} 
+	else if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if(0xA000 < dir && dir < 0xBFFF){ // 8KB EXTERNAL RAM (CARTRIDGE)
+	} 
+	else if(0xA000 <= dir && dir <= 0xBFFF){ // 8KB EXTERNAL RAM (CARTRIDGE)
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xC000 < dir && dir < 0xCFFF) { // 4KB INTERNAL RAM BANK 0
+	} 
+	else if (0xC000 <= dir && dir <= 0xCFFF) { // 4KB INTERNAL RAM BANK 0
+		return this->getAddressRam(dir, true);
+	} 
+	else if (0xD000 <= dir && dir <= 0xDFFF) { // 4KB INTERNAL RAM BANK 1
+		return this->getAddressRam(dir, true);
+	} 
+	else if (0xE000 <= dir && dir <= 0xFDFF) { // ECHO WRAM
+		return this->getAddress(dir - 0x2000);
+	} 
+	else if (0xFE00 <= dir && dir <= 0xFE9F) { // SPRITE ATTRIBUTE TABLE OAM
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xD000 < dir && dir < 0xDFFF) { // 4KB INTERNAL RAM BANK 1
-		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xE000 < dir && dir < 0xFDFF) { // ECHO WRAM
-		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xFE00 < dir && dir < 0xFE9F) { // SPRITE ATTRIBUTE TABLE OAM
-		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xFEA0 < dir && dir < 0xFE9F) { // NOT USED
+	} 
+	else if (0xFEA0 <= dir && dir <= 0xFE9F) { // NOT USED
 		return 0x00;
-	} else if (0xFF00 < dir && dir < 0xFEFF) { // IO PORTS
+	} 
+	else if (0xFF00 <= dir && dir <= 0xFEFF) { // IO PORTS
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if (0xFF80 < dir && dir < 0xFFFE) { // HIGH RAM
+	} 
+	else if (0xFF80 <= dir && dir <= 0xFFFE) { // HIGH RAM
 		printf("Address 0x%04x not mapped\n", dir);
-	} else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
+	} 
+	else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
 		printf("Address 0x%04x not mapped\n", dir);
 	}
+
+	printf("IVNALID ADDRESS - 0x%04x\n", dir);
 	return 0;
+}
+
+void Boy::setAddress(int dir, unsigned char val) {
+	if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
+
+	}
+	else if (0xA000 <= dir && dir <= 0xBFFF) { // 8KB EXTERNAL RAM (CARTRIDGE)
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xC000 <= dir && dir <= 0xDFFF) { // 8KB INTERNAL RAM BANKS
+		this->setAddressRam(dir - 0xC000, val);
+	}
+
+	// ADD SPECIAL REGISTERS
 }
 
 unsigned short Boy::getAddress2Bytes(int dir) {
@@ -176,6 +209,10 @@ unsigned short Boy::incrementPC() {
 	return this->pc;
 }
 
+void Boy::setSP(unsigned short sp){
+	this->sp = sp;
+}
+
 unsigned short Boy::jumpPC(unsigned short pc) {
 	this->pc = pc;
 	return this->pc;
@@ -224,16 +261,6 @@ void Boy::setRegisterPair(REGISTER r, unsigned short val) {
 	default:
 		return;
 	}
-
-	//char buffer[32];
-	//_itoa_s(val, buffer, 2);
-	//printf("binary: %s\n", buffer);
-
-	//_itoa_s((val >> 8), buffer, 2);
-	//printf("binary: %s\n", buffer);
-
-	//_itoa_s((val & 0xFF), buffer, 2);
-	//printf("binary: %s\n", buffer);
 	
 	(*hdir) = (val >> 8);
 	(*ldir) = (val & 0xFF);
@@ -260,4 +287,67 @@ unsigned short Boy::getRegisterPair(REGISTER r) {
 		break;
 	}
 	return hbyte << 8 | lbyte;
+}
+
+unsigned char Boy::getAddressRam(unsigned short dir, bool bus) {
+	if (bus) {
+		dir = dir - 0xC000;
+	}
+	if (dir > 0x1000) return this->RAM_BANK1[dir];
+	else return this->RAM_BANK2[dir - 0x1000];
+}
+
+void Boy::setAddressRam(int dir, unsigned char val) {
+	if (dir > 0x1000) {
+		this->RAM_BANK1[dir - 0x1000] = val;
+	}
+	else {
+		this->RAM_BANK2[dir - 0x1000] = val;
+	}
+}
+
+void Boy::incrementRegister(REGISTER r, int count) {
+	switch (r) {
+	case REG_AF:
+	case REG_BC:
+	case REG_DE:
+	case REG_HL:
+		this->setRegisterPair(r, this->getRegisterPair(r) + count);
+		break;
+	default:
+		unsigned char newReg = this->getRegister(r) + count;
+
+		this->setFlag(FLAG_N, false);
+		this->setFlag(FLAG_Z, newReg == 0);
+		this->setFlag(FLAG_H, newReg & 0x0F);
+
+		this->setRegister(r, newReg);
+	}
+}
+
+void Boy::decrementRegister(REGISTER r, int count) {
+	switch (r) {
+	case REG_AF:
+	case REG_BC:
+	case REG_DE:
+	case REG_HL:
+		this->setRegisterPair(r, this->getRegisterPair(r) - count);
+		break;
+	default:
+		unsigned char newReg = this->getRegister(r) - count;
+
+		this->setFlag(FLAG_N, true);
+		this->setFlag(FLAG_Z, newReg == 0);
+		this->setFlag(FLAG_H, (newReg & 0x0F) == 0x0F);
+
+		this->setRegister(r, newReg);
+	}
+}
+
+void Boy::incrementRegister(REGISTER r) {
+	return this->incrementRegister(r, 1);
+}
+
+void Boy::decrementRegister(REGISTER r) {
+	this->decrementRegister(r, 1);
 }
