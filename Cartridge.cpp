@@ -5,6 +5,7 @@ Cartridge::Cartridge(const char* path) {
 }
 
 bool Cartridge::read() {
+	if (this->loaded) return true;
 	FILE *cfile;
 	fopen_s(&cfile, this->path, "rb");
 	if (cfile == nullptr) return false;
@@ -12,10 +13,12 @@ bool Cartridge::read() {
 	fseek(cfile, 0, SEEK_END);
 	this->cartSize = ftell(cfile);
 	fseek(cfile, 0, SEEK_SET);
-	bytes.clear();
-	bytes.resize(this->cartSize);
-	fread(&bytes[0], this->cartSize, 1, cfile);
+	this->bytes.clear();
+	this->bytes.resize(this->cartSize);
+	fread(&this->bytes[0], this->cartSize, 1, cfile);
 	fclose(cfile);
+
+	this->loaded = true;
 
 	return true;
 }
@@ -29,13 +32,10 @@ void Cartridge::dumpCart() {
 	const int N = 16;
 	const char hex[] = "0123456789ABCDEF";
 	char buf[N * 4 + 5 + 2];
-	for (int i = 0; i < this->bytes.size(); ++i)
-	{
+	for (int i = 0; i < this->bytes.size(); ++i){
 		int n = i % N;
-		if (n == 0)
-		{
-			if (i)
-				puts(buf);
+		if (n == 0){
+			if (i) puts(buf);
 			memset(buf, 0x20, sizeof(buf));
 			buf[sizeof(buf) - 2] = '1';
 			buf[sizeof(buf) - 1] = '\0';
@@ -65,33 +65,53 @@ char Cartridge::sgbFlag() {
 }
 
 Cartridge_Type Cartridge::getType() {
+	if (this->type != NULL) return this->type;
+
 	char type = this->getAddress(0x147);
 	switch (type) {
-	case 0x00: return ROM_ONLY;
-	case 0x01: return MBC1;
+	case 0x00: this->type = ROM_ONLY;
+		break;
+	case 0x01: this->type = MBC1;
+		break;
 	case 0x02:
-	case 0x03: return MBC1_RAM;
+	case 0x03: this->type = MBC1_RAM;
+		break;
 	case 0x05:
-	case 0x06: return MBC2;
+	case 0x06: this->type = MBC2;
+		break;
 	case 0x08:
-	case 0x09: return ROM_RAM;
-	case 0x0B: return MMM1;
+	case 0x09: this->type = ROM_RAM;
+		break;
+	case 0x0B: this->type = MMM1;
+		break;
 	case 0x0C: 
-	case 0x0D: return MMM1_RAM;
-	case 0x11: return MBC3;
+	case 0x0D: this->type = MMM1_RAM;
+		break;
+	case 0x11: this->type = MBC3;
+		break;
 	case 0x12:
-	case 0x13: return MBC3_RAM;
-	case 0x19: return MBC5;
+	case 0x13: this->type = MBC3_RAM;
+		break;
+	case 0x19: this->type = MBC5;
+		break;
 	case 0x1A:
-	case 0x1B: return MBC5_RAM;
-	case 0x1C: return MBC5_RUMBLE;
+	case 0x1B: this->type = MBC5_RAM;
+		break;
+	case 0x1C: this->type = MBC5_RUMBLE;
+		break;
 	case 0x1D: 
-	case 0x1E: return MBC5_RUMBLE_RAM;
-	case 0x20: return MBC6;
-	case 0x22: return MBC7;
-	case 0xFC: return CAMERA;
-	case 0xFD: return TAMA5;
+	case 0x1E: this->type = MBC5_RUMBLE_RAM;
+		break;
+	case 0x20: this->type = MBC6;
+		break;
+	case 0x22: this->type = MBC7;
+		break;
+	case 0xFC: this->type = CAMERA;
+		break;
+	case 0xFD: this->type = TAMA5;
+		break;
 	}
+	return this->type;
 }
 
 char Cartridge::romSize() {
@@ -121,14 +141,9 @@ bool Cartridge::checkGlobalChecksum() {
 		x += this->getAddress(i);
 	}
 	y = this->getAddress(0x14E) << 8 | this->getAddress(0x14F);
-
 	return x==y;
 }
 
-void printBinary(short l) {
-	char buffer[32];
-	_itoa_s(l, buffer, 2);
-	printf("binary: %s\n", buffer);
+unsigned char Cartridge::getRAMAddress(int dir) {
+	return 0;
 }
-	
-

@@ -30,13 +30,13 @@ private:
 	vector<char> bytes;
 	int cartSize;
 	bool loaded;
-
-
+	Cartridge_Type type;
 public:
 	Cartridge(const char* path);
 
 	bool read();
 	unsigned char getAddress(int dir);
+	unsigned char getRAMAddress(int dir);
 
 	// Stole it from stackoverflow (shameful)
 	void dumpCart();
@@ -51,5 +51,4 @@ public:
 	
 	bool checkHeaderChecksum();
 	bool checkGlobalChecksum();
-	
 };

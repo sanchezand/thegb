@@ -1,16 +1,41 @@
 #pragma once
 #include <SDL.h>
 #include "Cartridge.h"
+
+enum FLAG {
+	FLAG_Z, FLAG_N, FLAG_H, FLAG_C
+};
+
+enum REGISTER {
+	REG_A, REG_F, REG_B, REG_C, REG_D, REG_E, REG_H, REG_L, REG_AF, REG_BC, REG_DE, REG_HL
+};
+
 class Boy {
 public:
-	void init(const char* title, int w, int h);
+	void init(int w, int h);
 	void handleKey(SDL_KeyboardEvent kc); // Change to something else
 	void tick();
 	void printCartridgeInfo();
 	void loadCartridge(Cartridge *cart);
 	void loadCartridge(const char* cartPath);
 	bool startCartridge();
-	void showWindow();
+	void powerUp();
+	void loop();
+	bool getFlag(FLAG f);
+	void setFlag(FLAG f, bool set);
+	unsigned char getAddress(int dir);
+	unsigned short getAddress2Bytes(int dir);
+	unsigned char getNextInstruction();
+	unsigned char getNextInstruction(bool increment);
+	unsigned short incrementPC();
+	unsigned short incrementPC(int count);
+	
+	unsigned short getStatus();
+	unsigned char getRegister(REGISTER r);
+	unsigned short getRegisterPair(REGISTER r);
+	void setRegisterPair(REGISTER r, unsigned short val);
+	void setRegister(REGISTER r, unsigned char val);
+	unsigned short jumpPC(unsigned short pc);
 
 private:
 	bool running;
@@ -18,8 +43,11 @@ private:
 	SDL_Renderer *renderer;
 	const char* title;
 	int w, h;
+	unsigned char status;
 	unsigned char A, F, B, C, D, E, H, L;
-	unsigned short pc;
+	unsigned short pc = 0x100;
 	unsigned short sp;
+	unsigned char* getRegisterDir(REGISTER r);
 	Cartridge *cartridge;
+
 };
