@@ -163,9 +163,16 @@
     <ClInclude Include="Util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="16bitALU.cpp" />
+    <ClCompile Include="16bitLSM.cpp" />
+    <ClCompile Include="8bitALU.cpp" />
+    <ClCompile Include="8bitLSM.cpp" />
     <ClCompile Include="Boy.cpp" />
     <ClCompile Include="Cartridge.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="JumpCallscpp.cpp" />
     <ClCompile Include="OPCodes.cpp" />
+    <ClCompile Include="RotateShift.cpp" />
     <ClCompile Include="thegb.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>

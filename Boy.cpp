@@ -6,7 +6,6 @@ void Boy::init(int w, int h){
 	this->title = "TheGB";
 	this->w = w;
 	this->h = h;
-	populateCodes();
 }
 
 void Boy::powerUp() {
@@ -32,10 +31,10 @@ void Boy::loop() {
 	//	this->tick();
 	//	
 	//}
-	for (int i = 0; i < 1000; i++) {
-		unsigned char instruction = this->getNextInstruction(false);
-		this->tick();
-	}
+	//for (int i = 0; i < 1000; i++) {
+	//	unsigned char instruction = this->getNextInstruction(false);
+	//	this->tick();
+	//}
 }
 
 void Boy::tick() {
@@ -119,7 +118,7 @@ unsigned char Boy::getCurrentInstruction() {
 	return this->getAddress(this->pc);
 }
 
-unsigned char Boy::getAddress(int dir) {
+unsigned char Boy::getAddress(unsigned short dir) {
 	if (0x0000 <= dir && dir <= 0x3FFF) { // 16KB ROM BANK 0 (CARTRIDGE)
 		return cartridge->getAddress(dir);
 	} 
@@ -163,7 +162,7 @@ unsigned char Boy::getAddress(int dir) {
 
 void Boy::setAddress(int dir, unsigned char val) {
 	if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
-
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
 	}
 	else if (0xA000 <= dir && dir <= 0xBFFF) { // 8KB EXTERNAL RAM (CARTRIDGE)
 		printf("WRITE: Address 0x%04x not mapped\n", dir);
@@ -171,6 +170,53 @@ void Boy::setAddress(int dir, unsigned char val) {
 	else if (0xC000 <= dir && dir <= 0xDFFF) { // 8KB INTERNAL RAM BANKS
 		this->setAddressRam(dir - 0xC000, val);
 	}
+	else if (0xE000 <= dir && dir <= 0xFDFF) { // ECHO WRAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFE00 <= dir && dir <= 0xFE9F) { // SPRITE ATTRIBUTE TABLE OAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFF00 <= dir && dir <= 0xFEFF) { // IO PORTS
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFF80 <= dir && dir <= 0xFFFE) { // HIGH RAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	// ADD SPECIAL REGISTERS
+}
+
+void Boy::setAddressPair(unsigned short dir, unsigned short val) {
+	unsigned char* bytes = separateBytes(val);
+
+	if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xA000 <= dir && dir <= 0xBFFF) { // 8KB EXTERNAL RAM (CARTRIDGE)
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xC000 <= dir && dir <= 0xDFFF) { // 8KB INTERNAL RAM BANKS
+		this->setAddressRam(dir - 0xC000, bytes[0]);
+		this->setAddressRam(dir - (0xC000) + 0x1, bytes[1]);
+	}
+	else if (0xE000 <= dir && dir <= 0xFDFF) { // ECHO WRAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFE00 <= dir && dir <= 0xFE9F) { // SPRITE ATTRIBUTE TABLE OAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFF00 <= dir && dir <= 0xFEFF) { // IO PORTS
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (0xFF80 <= dir && dir <= 0xFFFE) { // HIGH RAM
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+	else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
+		printf("WRITE: Address 0x%04x not mapped\n", dir);
+	}
+
 
 	// ADD SPECIAL REGISTERS
 }
@@ -181,7 +227,7 @@ unsigned short Boy::getAddress2Bytes(int dir) {
 	return lbyte << 8 | hbyte;
 }
 
-bool Boy::getFlag(FLAG f) {
+bool Boy::getFlag(Flag f) {
 	switch (f) {
 	case FLAG_Z: return (this->status) >> 7 & 1;
 	case FLAG_N: return (this->status) >> 6 & 1;
@@ -191,7 +237,7 @@ bool Boy::getFlag(FLAG f) {
 	}
 }
 
-void Boy::setFlag(FLAG f, bool set) {
+void Boy::setFlag(Flag f, bool set) {
 	unsigned short mask;
 	switch (f) {
 	case FLAG_Z:
@@ -228,8 +274,16 @@ unsigned short Boy::incrementPC() {
 	return this->pc;
 }
 
+unsigned short Boy::getPC() {
+	return this->pc;
+}
+
 void Boy::setSP(unsigned short sp){
 	this->sp = sp;
+}
+
+unsigned short Boy::getSP() {
+	return this->sp;
 }
 
 unsigned short Boy::jumpPC(unsigned short pc) {
@@ -237,7 +291,7 @@ unsigned short Boy::jumpPC(unsigned short pc) {
 	return this->pc;
 }
 
-unsigned char* Boy::getRegisterDir(REGISTER r) {
+unsigned char* Boy::getRegisterDir(Register r) {
 	switch (r) {
 	case REG_A: return &this->A;
 	case REG_B: return &this->B;
@@ -250,15 +304,15 @@ unsigned char* Boy::getRegisterDir(REGISTER r) {
 	}
 }
 
-unsigned char Boy::getRegister(REGISTER r) {
+unsigned char Boy::getRegister(Register r) {
 	return *(this->getRegisterDir(r));
 }
 
-void Boy::setRegister(REGISTER r, unsigned char val) {
+void Boy::setRegister(Register r, unsigned char val) {
 	*(this->getRegisterDir(r)) = val;
 }
 
-void Boy::setRegisterPair(REGISTER r, unsigned short val) {
+void Boy::setRegisterPair(Register r, unsigned short val) {
 	unsigned char *hdir, *ldir;
 	switch (r) {
 	case REG_AF:
@@ -285,7 +339,7 @@ void Boy::setRegisterPair(REGISTER r, unsigned short val) {
 	(*ldir) = (val & 0xFF);
 }
 
-unsigned short Boy::getRegisterPair(REGISTER r) {
+unsigned short Boy::getRegisterPair(Register r) {
 	unsigned char hbyte = 0x0, lbyte = 0x0;
 	switch (r) {
 	case REG_AF:
@@ -325,7 +379,7 @@ void Boy::setAddressRam(int dir, unsigned char val) {
 	}
 }
 
-void Boy::incrementRegister(REGISTER r, int count) {
+void Boy::incrementRegister(Register r, int count) {
 	switch (r) {
 	case REG_AF:
 	case REG_BC:
@@ -344,7 +398,7 @@ void Boy::incrementRegister(REGISTER r, int count) {
 	}
 }
 
-void Boy::decrementRegister(REGISTER r, int count) {
+void Boy::decrementRegister(Register r, int count) {
 	switch (r) {
 	case REG_AF:
 	case REG_BC:
@@ -363,15 +417,15 @@ void Boy::decrementRegister(REGISTER r, int count) {
 	}
 }
 
-void Boy::incrementRegister(REGISTER r) {
+void Boy::incrementRegister(Register r) {
 	return this->incrementRegister(r, 1);
 }
 
-void Boy::decrementRegister(REGISTER r) {
+void Boy::decrementRegister(Register r) {
 	this->decrementRegister(r, 1);
 }
 
-void Boy::addRegisters(REGISTER dest, REGISTER adding) {
+void Boy::addRegisters(Register dest, Register adding) {
 	switch (dest) {
 		case REG_AF:
 		case REG_BC:
@@ -403,4 +457,22 @@ void Boy::addRegisters(REGISTER dest, REGISTER adding) {
 			break;
 		}
 	}
+}
+
+void Boy::loadNextToRegister(Register r) {
+	unsigned char n = getNextInstruction();
+	this->setRegister(r, n);
+}
+
+void Boy::loadNextPairToRegister(Register r) {
+	unsigned char nn = getNextInstructionPair();
+	this->setRegisterPair(r, nn);
+}
+
+void Boy::pushStack(Register r) {
+
+}
+
+void Boy::popStack(Register r) {
+
 }

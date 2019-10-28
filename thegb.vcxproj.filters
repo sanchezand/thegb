@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\OPCodes">
+      <UniqueIdentifier>{94372a7d-684c-4cef-b4a9-691592483953}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boy.h">
@@ -38,10 +41,31 @@
     <ClCompile Include="Cartridge.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OPCodes.cpp">
+    <ClCompile Include="Util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Util.cpp">
+    <ClCompile Include="8bitLSM.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="16bitLSM.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="8bitALU.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="16bitALU.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateShift.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Control.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="JumpCallscpp.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="OPCodes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

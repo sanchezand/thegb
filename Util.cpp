@@ -24,3 +24,17 @@ void printHex(unsigned short b) {
 unsigned short joinBytes(unsigned char high, unsigned char low) {
 	return high << 8 | low;
 }
+
+unsigned char* separateBytes(unsigned short b) {
+	static unsigned char bytes[2];
+	bytes[0] = b >> 8;
+	bytes[1] = b & (0xFF);
+	return bytes;
+}
+
+unsigned char* separateBytes(unsigned char b) {
+	static unsigned char bytes[2];
+	bytes[0] = b >> 4;
+	bytes[1] = b & (0xF);
+	return bytes;
+}

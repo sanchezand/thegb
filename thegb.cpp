@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "Boy.h"
 #include "Util.h"
+#include "OPCodes.h"
 #undef main
 
 Boy *boy;
@@ -14,11 +15,6 @@ int main(){
 	boy->init(160, 144);
 	boy->loadCartridge(cartPath);
 	boy->printCartridgeInfo();
-
-	//printBinary(joinBytes(0b1001, 0b0001));
-	boy->jumpPC(0x101);
-	printf("0x%02x\n", boy->getCurrentInstruction());
-	printf("0x%04x", boy->getNextInstructionPair());
 
 	//unsigned short b = 0b11011001;
 	//printBinary(b);
