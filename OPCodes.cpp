@@ -20,6 +20,7 @@ OPCodeFn* getOpFunction(unsigned char code) {
 }
 
 char opDummy(Boy* gb) {
+	printf("Missing implementation: 0x%02x\n", gb->getCurrentInstruction());
 	return 0;
 }
 

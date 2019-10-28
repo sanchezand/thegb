@@ -254,7 +254,7 @@ char op0xC7(Boy* gb);
 char op0xC8(Boy* gb);
 char op0xC9(Boy* gb);
 char op0xCA(Boy* gb);
-char op0xCB(Boy* gb);
+// char op0xCB(Boy* gb);
 char op0xCC(Boy* gb);
 char op0xCD(Boy* gb);
 char op0xCE(Boy* gb);

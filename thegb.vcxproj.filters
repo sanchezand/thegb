@@ -59,14 +59,14 @@
     <ClCompile Include="RotateShift.cpp">
       <Filter>Source Files\OPCodes</Filter>
     </ClCompile>
-    <ClCompile Include="Control.cpp">
-      <Filter>Source Files\OPCodes</Filter>
-    </ClCompile>
-    <ClCompile Include="JumpCallscpp.cpp">
-      <Filter>Source Files\OPCodes</Filter>
-    </ClCompile>
     <ClCompile Include="OPCodes.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
+    <ClCompile Include="JumpCalls.cpp">
+      <Filter>Source Files\OPCodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

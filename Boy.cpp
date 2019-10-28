@@ -31,10 +31,10 @@ void Boy::loop() {
 	//	this->tick();
 	//	
 	//}
-	//for (int i = 0; i < 1000; i++) {
-	//	unsigned char instruction = this->getNextInstruction(false);
-	//	this->tick();
-	//}
+	for (int i = 0; i < 20; i++) {
+		unsigned char instruction = this->getNextInstruction(false);
+		this->tick();
+	}
 }
 
 void Boy::tick() {
