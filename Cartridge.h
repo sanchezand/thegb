@@ -35,8 +35,8 @@ public:
 	Cartridge(const char* path);
 
 	bool read();
-	unsigned char getAddress(int dir);
-	unsigned char getRAMAddress(int dir);
+	uint8_t getAddress(int dir);
+	uint8_t getRAMAddress(int dir);
 
 	// Stole it from stackoverflow (shameful)
 	void dumpCart();

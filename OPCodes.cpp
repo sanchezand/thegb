@@ -3,7 +3,7 @@
 
 OPCodeFn* opMap[0xFF];
 
-OPCode executeCode(Boy *gb, unsigned char code) {
+OPCode executeCode(Boy *gb, uint8_t code) {
 	OPCode opcode;
 	opcode.code = code;
 	opcode.cycles = getOpFunction(code)(gb);
@@ -11,7 +11,7 @@ OPCode executeCode(Boy *gb, unsigned char code) {
 	return opcode;
 }
 
-OPCodeFn* getOpFunction(unsigned char code) {
+OPCodeFn* getOpFunction(uint8_t code) {
 	OPCodeFn* fn = opMap[code];
 	if (fn == nullptr) {
 		return &opDummy;
@@ -21,6 +21,10 @@ OPCodeFn* getOpFunction(unsigned char code) {
 
 char opDummy(Boy* gb) {
 	printf("Missing implementation: 0x%02x\n", gb->getCurrentInstruction());
+	return 0;
+}
+
+char op0xCB(Boy* gb) {
 	return 0;
 }
 

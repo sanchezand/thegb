@@ -323,7 +323,7 @@ char op0x75(Boy* gb) {
 
 // LD (HL), n
 char op0x36(Boy* gb) {
-	unsigned char n = gb->getNextInstruction();
+	uint8_t n = gb->getNextInstruction();
 	gb->setAddress(gb->getRegisterPair(REG_HL), n);
 	return 8;
 }
@@ -393,7 +393,7 @@ char op0x7E(Boy* gb) {
 
 // LD A, (nn)
 char op0xFA(Boy* gb) {
-	unsigned short nn = gb->getNextInstructionPair();
+	uint16_t nn = gb->getNextInstructionPair();
 	gb->setRegister(REG_A, gb->getAddress(nn));
 	return 16;
 }
@@ -445,28 +445,28 @@ char op0x6F(Boy* gb) {
 
 // LD (BC), A
 char op0x02(Boy* gb) {
-	unsigned short n = gb->getRegisterPair(REG_BC);
+	uint16_t n = gb->getRegisterPair(REG_BC);
 	gb->setAddress(n, gb->getRegister(REG_A));
 	return 8;
 }
 
 // LD (DE), A
 char op0x12(Boy* gb) {
-	unsigned short n = gb->getRegisterPair(REG_DE);
+	uint16_t n = gb->getRegisterPair(REG_DE);
 	gb->setAddress(n, gb->getRegister(REG_A));
 	return 8;
 }
 
 // LD (HL), A
 char op0x77(Boy* gb) {
-	unsigned short n = gb->getRegisterPair(REG_HL);
+	uint16_t n = gb->getRegisterPair(REG_HL);
 	gb->setAddress(n, gb->getRegister(REG_A));
 	return 8;
 }
 
 // LD (nn), A
 char op0xEA(Boy* gb) {
-	unsigned short n = gb->getNextInstructionPair();
+	uint16_t n = gb->getNextInstructionPair();
 	gb->setAddress(n, gb->getRegister(REG_A));
 	return 8;
 }
@@ -477,15 +477,15 @@ char op0xEA(Boy* gb) {
 
 // LD A, (C)
 char op0xF2(Boy* gb) {
-	unsigned short dir = 0xFF00 + gb->getRegister(REG_C);
-	unsigned char val = gb->getAddress(dir);
+	uint16_t dir = 0xFF00 + gb->getRegister(REG_C);
+	uint8_t val = gb->getAddress(dir);
 	gb->setRegister(REG_A, val);
 	return 8;
 }
 
 // LD (C), A
 char op0xE2(Boy* gb) {
-	unsigned short dir = 0xFF00 + gb->getRegister(REG_C);
+	uint16_t dir = 0xFF00 + gb->getRegister(REG_C);
 	gb->setAddress(dir, gb->getRegister(REG_A));
 	return 8;
 }
@@ -494,7 +494,7 @@ char op0xE2(Boy* gb) {
 // LD A, (HL-)
 // LDD A, (HL)
 char op0x3A(Boy* gb) {
-	unsigned short HL = gb->getAddress(gb->getRegisterPair(REG_HL));
+	uint16_t HL = gb->getAddress(gb->getRegisterPair(REG_HL));
 	gb->setRegister(REG_A, HL);
 	gb->decrementRegister(REG_HL);
 	return 8;
@@ -529,14 +529,14 @@ char op0x22(Boy* gb) {
 
 // LDH (n), A
 char op0xE0(Boy* gb) {
-	unsigned char n = gb->getNextInstruction();
+	uint8_t n = gb->getNextInstruction();
 	gb->setAddress((0xFF00 + n), gb->getRegister(REG_A));
 	return 12;
 }
 
 // LDH A, (n)
 char op0xF0(Boy* gb) {
-	unsigned char n = gb->getNextInstruction();
+	uint8_t n = gb->getNextInstruction();
 	gb->setRegister(REG_A, gb->getAddress((0xFF00 + n)));
 	return 12;
 }

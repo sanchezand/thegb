@@ -39,8 +39,8 @@ char op0xF9(Boy* gb) {
 // LD HL, SP+n
 // LDHL SP, n
 char op0xF8(Boy* gb) {
-	unsigned char n = gb->getNextInstruction();
-	unsigned short sp = gb->getSP() + n;
+	uint8_t n = gb->getNextInstruction();
+	uint16_t sp = gb->getSP() + n;
 
 	gb->setFlag(FLAG_Z, false);
 	gb->setFlag(FLAG_N, false);
@@ -54,7 +54,7 @@ char op0xF8(Boy* gb) {
 
 // LD (nn), SP
 char op0x08(Boy* gb) {
-	unsigned short nn = gb->getNextInstructionPair();
+	uint16_t nn = gb->getNextInstructionPair();
 	gb->setAddressPair(nn, gb->getSP());
 	return 20;
 }

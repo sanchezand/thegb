@@ -68,5 +68,8 @@
     <ClCompile Include="JumpCalls.cpp">
       <Filter>Source Files\OPCodes</Filter>
     </ClCompile>
+    <ClCompile Include="BitOP.cpp">
+      <Filter>Source Files\OPCodes</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

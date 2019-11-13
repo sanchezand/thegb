@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 #include <SDL.h>
 #include "Cartridge.h"
 
@@ -17,16 +18,16 @@ private:
 	SDL_Renderer *renderer;
 	const char* title;
 	int w, h;
-	unsigned char status;
-	unsigned char A, F, B, C, D, E, H, L;
-	unsigned short pc = 0x100;
-	unsigned short sp;
-	unsigned char* getRegisterDir(Register r);
+	uint8_t status;
+	uint8_t A, F, B, C, D, E, H, L;
+	uint16_t pc = 0x100;
+	uint16_t sp;
+	uint8_t* getRegisterDir(Register r);
 	Cartridge *cartridge;
 
-	unsigned char RAM_BANK1[4096];
-	unsigned char RAM_BANK2[4096];
-	unsigned char VRAM[8192];
+	uint8_t RAM_BANK1[4096];
+	uint8_t RAM_BANK2[4096];
+	uint8_t VRAM[8192];
 
 public:
 	void init(int w, int h);
@@ -40,22 +41,22 @@ public:
 	void loop();
 	bool getFlag(Flag f);
 	void setFlag(Flag f, bool set);
-	unsigned char getAddress(unsigned short dir);
-	unsigned short getAddress2Bytes(int dir);
-	unsigned char getCurrentInstruction();
-	unsigned char getNextInstruction();
-	unsigned char getNextInstruction(bool increment);
-	unsigned short getNextInstructionPair();
-	unsigned short getNextInstructionPair(bool increment);
-	unsigned short getPC();
-	unsigned short incrementPC();
-	unsigned short incrementPC(int count);
+	uint8_t getAddress(uint16_t dir);
+	uint16_t getAddress2Bytes(int dir);
+	uint8_t getCurrentInstruction();
+	uint8_t getNextInstruction();
+	uint8_t getNextInstruction(bool increment);
+	uint16_t getNextInstructionPair();
+	uint16_t getNextInstructionPair(bool increment);
+	uint16_t getPC();
+	uint16_t incrementPC();
+	uint16_t incrementPC(int count);
 	
-	unsigned short getStatus();
-	unsigned char getRegister(Register r);
-	unsigned short getRegisterPair(Register r);
-	void setRegisterPair(Register r, unsigned short val);
-	void setRegister(Register r, unsigned char val);
+	uint16_t getStatus();
+	uint8_t getRegister(Register r);
+	uint16_t getRegisterPair(Register r);
+	void setRegisterPair(Register r, uint16_t val);
+	void setRegister(Register r, uint8_t val);
 	void incrementRegister(Register r);
 	void incrementRegister(Register r, int count);
 	void decrementRegister(Register r);
@@ -67,11 +68,11 @@ public:
 	void pushStack(Register r);
 	void popStack(Register r);
 
-	void setSP(unsigned short sp);
-	unsigned short getSP();
-	unsigned short jumpPC(unsigned short pc);
-	unsigned char getAddressRam(unsigned short dir, bool bus);
-	void setAddress(int dir, unsigned char val);
-	void setAddressPair(unsigned short dir, unsigned short val);
-	void setAddressRam(int dir, unsigned char val);
+	void setSP(uint16_t sp);
+	uint16_t getSP();
+	uint16_t jumpPC(uint16_t pc);
+	uint8_t getAddressRam(uint16_t dir, bool bus);
+	void setAddress(int dir, uint8_t val);
+	void setAddressPair(uint16_t dir, uint16_t val);
+	void setAddressRam(int dir, uint8_t val);
 };

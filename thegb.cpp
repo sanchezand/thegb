@@ -9,19 +9,19 @@ Boy *boy;
 
 int main(){
 
-	const char* cartPath = "E:\\Tetris.gb";
+	const char* cartPath = "E:\\cpu_instrs.gb";
 
 	boy = new Boy();
 	boy->init(160, 144);
 	boy->loadCartridge(cartPath);
 	boy->printCartridgeInfo();
 
-	//unsigned short b = 0b11011001;
+	//uint16_t b = 0b11011001;
 	//printBinary(b);
-	//unsigned char b2 = b >> 4;
+	//uint8_t b2 = b >> 4;
 	//printBinary(b2);
-	////unsigned char b3 = b & 0b00001111;
-	//unsigned char b3 = b & (0xF);
+	////uint8_t b3 = b & 0b00001111;
+	//uint8_t b3 = b & (0xF);
 	//printBinary(b3);
 	
 	//SDL_Event event;

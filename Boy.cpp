@@ -32,13 +32,13 @@ void Boy::loop() {
 	//	
 	//}
 	for (int i = 0; i < 20; i++) {
-		unsigned char instruction = this->getNextInstruction(false);
+		uint8_t instruction = this->getNextInstruction(false);
 		this->tick();
 	}
 }
 
 void Boy::tick() {
-	unsigned char instruction = this->getNextInstruction(false);
+	uint8_t instruction = this->getNextInstruction(false);
 	//printf("Exec: 0x%02x\n", instruction);
 	executeCode(this, instruction);
 	this->incrementPC();
@@ -90,35 +90,35 @@ bool Boy::startCartridge() {
 	return true;
 }
 
-unsigned char Boy::getNextInstruction(bool increment) {
+uint8_t Boy::getNextInstruction(bool increment) {
 	int dir = this->pc + 1;
 	if (increment) this->pc = dir;
 	return this->cartridge->getAddress(dir);
 }
 
-unsigned char Boy::getNextInstruction() {
+uint8_t Boy::getNextInstruction() {
 	return this->getNextInstruction(true);
 }
 
-unsigned short Boy::getNextInstructionPair(bool increment) {
+uint16_t Boy::getNextInstructionPair(bool increment) {
 	int dir = this->pc + 1;
-	unsigned char hbyte = this->cartridge->getAddress(dir);
+	uint8_t hbyte = this->cartridge->getAddress(dir);
 	dir += 1;
-	unsigned char lbyte = this->cartridge->getAddress(dir);
+	uint8_t lbyte = this->cartridge->getAddress(dir);
 	if (increment) this->pc = dir;
 
-	return joinBytes(hbyte, lbyte);
+	return joinBytes16(hbyte, lbyte);
 }
 
-unsigned short Boy::getNextInstructionPair() {
+uint16_t Boy::getNextInstructionPair() {
 	return this->getNextInstructionPair(true);
 }
 
-unsigned char Boy::getCurrentInstruction() {
+uint8_t Boy::getCurrentInstruction() {
 	return this->getAddress(this->pc);
 }
 
-unsigned char Boy::getAddress(unsigned short dir) {
+uint8_t Boy::getAddress(uint16_t dir) {
 	if (0x0000 <= dir && dir <= 0x3FFF) { // 16KB ROM BANK 0 (CARTRIDGE)
 		return cartridge->getAddress(dir);
 	} 
@@ -160,7 +160,7 @@ unsigned char Boy::getAddress(unsigned short dir) {
 	return 0;
 }
 
-void Boy::setAddress(int dir, unsigned char val) {
+void Boy::setAddress(int dir, uint8_t val) {
 	if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
 		printf("WRITE: Address 0x%04x not mapped\n", dir);
 	}
@@ -188,8 +188,8 @@ void Boy::setAddress(int dir, unsigned char val) {
 	// ADD SPECIAL REGISTERS
 }
 
-void Boy::setAddressPair(unsigned short dir, unsigned short val) {
-	unsigned char* bytes = separateBytes(val);
+void Boy::setAddressPair(uint16_t dir, uint16_t val) {
+	uint8_t* bytes = separateBytes(val);
 
 	if (0x8000 <= dir && dir <= 0x9FFF) { // 8KB VRAM
 		printf("WRITE: Address 0x%04x not mapped\n", dir);
@@ -221,9 +221,9 @@ void Boy::setAddressPair(unsigned short dir, unsigned short val) {
 	// ADD SPECIAL REGISTERS
 }
 
-unsigned short Boy::getAddress2Bytes(int dir) {
-	unsigned char lbyte = this->getAddress(dir);
-	unsigned char hbyte = this->getAddress(dir + 1);
+uint16_t Boy::getAddress2Bytes(int dir) {
+	uint8_t lbyte = this->getAddress(dir);
+	uint8_t hbyte = this->getAddress(dir + 1);
 	return lbyte << 8 | hbyte;
 }
 
@@ -238,7 +238,7 @@ bool Boy::getFlag(Flag f) {
 }
 
 void Boy::setFlag(Flag f, bool set) {
-	unsigned short mask;
+	uint16_t mask;
 	switch (f) {
 	case FLAG_Z:
 		mask = (1 << 7);
@@ -260,38 +260,38 @@ void Boy::setFlag(Flag f, bool set) {
 	}
 }
 
-unsigned short Boy::getStatus() {
+uint16_t Boy::getStatus() {
 	return this->status;
 }
 
-unsigned short Boy::incrementPC(int count) {
+uint16_t Boy::incrementPC(int count) {
 	this->pc += count;
 	return this->pc;
 }
 
-unsigned short Boy::incrementPC() {
+uint16_t Boy::incrementPC() {
 	this->pc++;
 	return this->pc;
 }
 
-unsigned short Boy::getPC() {
+uint16_t Boy::getPC() {
 	return this->pc;
 }
 
-void Boy::setSP(unsigned short sp){
+void Boy::setSP(uint16_t sp){
 	this->sp = sp;
 }
 
-unsigned short Boy::getSP() {
+uint16_t Boy::getSP() {
 	return this->sp;
 }
 
-unsigned short Boy::jumpPC(unsigned short pc) {
+uint16_t Boy::jumpPC(uint16_t pc) {
 	this->pc = pc;
 	return this->pc;
 }
 
-unsigned char* Boy::getRegisterDir(Register r) {
+uint8_t* Boy::getRegisterDir(Register r) {
 	switch (r) {
 	case REG_A: return &this->A;
 	case REG_B: return &this->B;
@@ -304,16 +304,16 @@ unsigned char* Boy::getRegisterDir(Register r) {
 	}
 }
 
-unsigned char Boy::getRegister(Register r) {
+uint8_t Boy::getRegister(Register r) {
 	return *(this->getRegisterDir(r));
 }
 
-void Boy::setRegister(Register r, unsigned char val) {
+void Boy::setRegister(Register r, uint8_t val) {
 	*(this->getRegisterDir(r)) = val;
 }
 
-void Boy::setRegisterPair(Register r, unsigned short val) {
-	unsigned char *hdir, *ldir;
+void Boy::setRegisterPair(Register r, uint16_t val) {
+	uint8_t *hdir, *ldir;
 	switch (r) {
 	case REG_AF:
 		hdir = this->getRegisterDir(REG_A);
@@ -339,8 +339,8 @@ void Boy::setRegisterPair(Register r, unsigned short val) {
 	(*ldir) = (val & 0xFF);
 }
 
-unsigned short Boy::getRegisterPair(Register r) {
-	unsigned char hbyte = 0x0, lbyte = 0x0;
+uint16_t Boy::getRegisterPair(Register r) {
+	uint8_t hbyte = 0x0, lbyte = 0x0;
 	switch (r) {
 	case REG_AF:
 		hbyte = this->A;
@@ -362,7 +362,7 @@ unsigned short Boy::getRegisterPair(Register r) {
 	return hbyte << 8 | lbyte;
 }
 
-unsigned char Boy::getAddressRam(unsigned short dir, bool bus) {
+uint8_t Boy::getAddressRam(uint16_t dir, bool bus) {
 	if (bus) {
 		dir = dir - 0xC000;
 	}
@@ -370,7 +370,7 @@ unsigned char Boy::getAddressRam(unsigned short dir, bool bus) {
 	else return this->RAM_BANK2[dir - 0x1000];
 }
 
-void Boy::setAddressRam(int dir, unsigned char val) {
+void Boy::setAddressRam(int dir, uint8_t val) {
 	if (dir > 0x1000) {
 		this->RAM_BANK1[dir - 0x1000] = val;
 	}
@@ -388,7 +388,7 @@ void Boy::incrementRegister(Register r, int count) {
 		this->setRegisterPair(r, this->getRegisterPair(r) + count);
 		break;
 	default:
-		unsigned char newReg = this->getRegister(r) + count;
+		uint8_t newReg = this->getRegister(r) + count;
 
 		this->setFlag(FLAG_N, false);
 		this->setFlag(FLAG_Z, newReg == 0);
@@ -407,7 +407,7 @@ void Boy::decrementRegister(Register r, int count) {
 		this->setRegisterPair(r, this->getRegisterPair(r) - count);
 		break;
 	default:
-		unsigned char newReg = this->getRegister(r) - count;
+		uint8_t newReg = this->getRegister(r) - count;
 
 		this->setFlag(FLAG_N, true);
 		this->setFlag(FLAG_Z, newReg == 0);
@@ -431,8 +431,8 @@ void Boy::addRegisters(Register dest, Register adding) {
 		case REG_BC:
 		case REG_DE:
 		case REG_HL: {
-			unsigned short d = this->getRegisterPair(dest);
-			unsigned short a = this->getRegisterPair(adding);
+			uint16_t d = this->getRegisterPair(dest);
+			uint16_t a = this->getRegisterPair(adding);
 
 			this->setRegisterPair(dest, d + a);
 			this->setFlag(FLAG_N, false);
@@ -441,8 +441,8 @@ void Boy::addRegisters(Register dest, Register adding) {
 			break;
 		}
 		default: {
-			unsigned char dc;
-			unsigned char ac = this->getRegister(dest);
+			uint8_t dc;
+			uint8_t ac = this->getRegister(dest);
 			if (adding == REG_HL) {
 				dc = this->getAddress(this->getRegister(adding));
 			}
@@ -460,12 +460,12 @@ void Boy::addRegisters(Register dest, Register adding) {
 }
 
 void Boy::loadNextToRegister(Register r) {
-	unsigned char n = getNextInstruction();
+	uint8_t n = getNextInstruction();
 	this->setRegister(r, n);
 }
 
 void Boy::loadNextPairToRegister(Register r) {
-	unsigned char nn = getNextInstructionPair();
+	uint8_t nn = getNextInstructionPair();
 	this->setRegisterPair(r, nn);
 }
 

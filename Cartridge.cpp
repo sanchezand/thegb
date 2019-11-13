@@ -23,7 +23,7 @@ bool Cartridge::read() {
 	return true;
 }
 
-unsigned char Cartridge::getAddress(int dir) {
+uint8_t Cartridge::getAddress(int dir) {
 	if (!this->loaded)return 0x00;
 	return bytes[dir];
 }
@@ -40,7 +40,7 @@ void Cartridge::dumpCart() {
 			buf[sizeof(buf) - 2] = '1';
 			buf[sizeof(buf) - 1] = '\0';
 		}
-		unsigned char c = (unsigned char)this->bytes[i];
+		uint8_t c = (uint8_t)this->bytes[i];
 		buf[n * 3 + 0] = hex[c / 16];
 		buf[n * 3 + 1] = hex[c % 16];
 		buf[3 * N + 5 + n] = (c >= ' ' && c <= '~') ? c : '.';
@@ -144,6 +144,6 @@ bool Cartridge::checkGlobalChecksum() {
 	return x==y;
 }
 
-unsigned char Cartridge::getRAMAddress(int dir) {
+uint8_t Cartridge::getRAMAddress(int dir) {
 	return 0;
 }

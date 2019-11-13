@@ -167,6 +167,7 @@
     <ClCompile Include="16bitLSM.cpp" />
     <ClCompile Include="8bitALU.cpp" />
     <ClCompile Include="8bitLSM.cpp" />
+    <ClCompile Include="BitOP.cpp" />
     <ClCompile Include="Boy.cpp" />
     <ClCompile Include="Cartridge.cpp" />
     <ClCompile Include="Misc.cpp" />

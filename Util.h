@@ -1,10 +1,15 @@
 #pragma once
+#include <stdint.h>
 
-void printBinary(unsigned char b);
-void printBinary(unsigned short b);
+void printBinary(uint8_t b);
+void printBinary(uint16_t b);
 
-void printHex(unsigned char b);
-void printHex(unsigned short b);
+void printHex(uint8_t b);
+void printHex(uint16_t b);
 
-unsigned short joinBytes(unsigned char high, unsigned char low);
-unsigned char* separateBytes(unsigned short b);
+uint16_t joinBytes16(uint8_t high, uint8_t low);
+uint8_t joinBytes8(uint8_t high, uint8_t low);
+uint8_t* separateBytes(uint16_t b);
+
+uint8_t swap(uint8_t b);
+uint16_t swap(uint16_t b);
