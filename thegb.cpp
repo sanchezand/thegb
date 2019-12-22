@@ -10,7 +10,7 @@ Boy *boy;
 int main(){
 
 	const char* cartPath = "E:\\cpu_instrs.gb";
-
+	
 	boy = new Boy();
 	boy->init(160, 144);
 	boy->loadCartridge(cartPath);

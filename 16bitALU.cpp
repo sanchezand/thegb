@@ -1,91 +1,91 @@
 #include "OPCodes.h"
 
 // ADD HL, BC
-char op0x09(Boy* gb) {
+OPCode op0x09(Boy* gb) {
 
-	return 8;
+	return OPCode(0x09, "ADD HL, BC", 8);
 }
 
 // ADD HL, DE
-char op0x19(Boy* gb) {
+OPCode op0x19(Boy* gb) {
 
-	return 8;
+	return OPCode(0x19, "ADD HL, DE", 8);
 }
 
 // ADD HL, HL
-char op0x29(Boy* gb) {
+OPCode op0x29(Boy* gb) {
 
-	return 8;
+	return OPCode(0x29, "ADD HL, HL", 8);
 }
 
 // ADD HL, SP
-char op0x39(Boy* gb) {
+OPCode op0x39(Boy* gb) {
 
-	return 8;
+	return OPCode(0x39, "ADD HL, SP", 8);
 }
 
 
 
 // ADD SP, #
-char op0xE8(Boy* gb) {
+OPCode op0xE8(Boy* gb) {
 
-	return 16;
+	return OPCode(0xE8, "ADD HL, #", 16);
 }
 
 
 
 
 // INC BC
-char op0x03(Boy* gb) {
+OPCode op0x03(Boy* gb) {
 
-	return 8;
+	return OPCode(0x03, "INC BC", 8);
 }
 
 // INC DE
-char op0x13(Boy* gb) {
+OPCode op0x13(Boy* gb) {
 
-	return 8;
+	return OPCode(0x13, "INC DE", 8);
 }
 
 
 // INC HL
-char op0x23(Boy* gb) {
+OPCode op0x23(Boy* gb) {
 
-	return 8;
+	return OPCode(0x23, "INC HL", 8);
 }
 
 
 // INC SP
-char op0x33(Boy* gb) {
+OPCode op0x33(Boy* gb) {
 
-	return 8;
+	return OPCode(0x33, "INC SP", 8);
 }
 
 
 
 
 // DEC BC
-char op0x0B(Boy* gb) {
+OPCode op0x0B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0B, "DEC BC", 8);
 }
 
 // DEC DE
-char op0x1B(Boy* gb) {
+OPCode op0x1B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x03, "DEC BC", 8);
 }
 
 
 // DEC HL
-char op0x2B(Boy* gb) {
+OPCode op0x2B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2B, "DEC HL", 8);
 }
 
 
 // DEC SP
-char op0x3B(Boy* gb) {
+OPCode op0x3B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3B, "DEC SP", 8);
 }

@@ -1,23 +1,24 @@
 #include "OPCodes.h"
 
 // RLCA
-char op0x07(Boy* gb) {
-	return 4;
+OPCode op0x07(Boy* gb) {
+
+	return OPCode(0x07, "RLCA", 4);
 }
 
 // RLA
-char op0x17(Boy* gb) {
-	return 4;
+OPCode op0x17(Boy* gb) {
+	return OPCode(0x17, "RLA", 4);
 }
 
 // RRCA
-char op0x0F(Boy* gb) {
-	return 4;
+OPCode op0x0F(Boy* gb) {
+	return OPCode(0x0F, "RRCA", 4);
 }
 
 // RRA
-char op0x1F(Boy* gb) {
-	return 4;
+OPCode op0x1F(Boy* gb) {
+	return OPCode(0x1F, "RRA", 4);
 }
 
 
@@ -26,102 +27,102 @@ char op0x1F(Boy* gb) {
 
 
 // RLC A
-char opCB0x07(Boy* gb) {
+OPCode opCB0x07(Boy* gb) {
 
-	return 8;
+	return OPCode(0x07, "RLC A", 8, true);
 }
 
 // RLC B
-char opCB0x00(Boy* gb) {
+OPCode opCB0x00(Boy* gb) {
 
-	return 8;
+	return OPCode(0x00, "RLC B", 8, true);
 }
 
 // RLC C
-char opCB0x01(Boy* gb) {
+OPCode opCB0x01(Boy* gb) {
 
-	return 8;
+	return OPCode(0x01, "RLC C", 8, true);
 }
 
 // RLC D
-char opCB0x02(Boy* gb) {
+OPCode opCB0x02(Boy* gb) {
 
-	return 8;
+	return OPCode(0x02, "RLC D", 8, true);
 }
 
 // RLC E
-char opCB0x03(Boy* gb) {
+OPCode opCB0x03(Boy* gb) {
 
-	return 8;
+	return OPCode(0x03, "RLC E", 8, true);
 }
 
 // RLC H
-char opCB0x04(Boy* gb) {
+OPCode opCB0x04(Boy* gb) {
 
-	return 8;
+	return OPCode(0x04, "RLC H", 8, true);
 }
 
 // RLC L
-char opCB0x05(Boy* gb) {
+OPCode opCB0x05(Boy* gb) {
 
-	return 8;
+	return OPCode(0x05, "RLC L", 8, true);
 }
 
 // RLC (HL)
-char opCB0x06(Boy* gb) {
+OPCode opCB0x06(Boy* gb) {
 
-	return 16;
+	return OPCode(0x06, "RLC (HL)", 16, true);
 }
 
 
 
 
 // RL A
-char opCB0x17(Boy* gb) {
+OPCode opCB0x17(Boy* gb) {
 
-	return 8;
+	return OPCode(0x17, "RL A", 8, true);
 }
 
 // RL B
-char opCB0x10(Boy* gb) {
+OPCode opCB0x10(Boy* gb) {
 
-	return 8;
+	return OPCode(0x10, "RL B", 8, true);
 }
 
 // RL C
-char opCB0x11(Boy* gb) {
+OPCode opCB0x11(Boy* gb) {
 
-	return 8;
+	return OPCode(0x11, "RL C", 8, true);
 }
 
 // RL D
-char opCB0x12(Boy* gb) {
+OPCode opCB0x12(Boy* gb) {
 
-	return 8;
+	return OPCode(0x12, "RL D", 8, true);
 }
 
 // RL E
-char opCB0x13(Boy* gb) {
+OPCode opCB0x13(Boy* gb) {
 
-	return 8;
+	return OPCode(0x13, "RL E", 8, true);
 }
 
 // RL H
-char opCB0x14(Boy* gb) {
+OPCode opCB0x14(Boy* gb) {
 
-	return 8;
+	return OPCode(0x14, "RL H", 8, true);
 }
 
 // RL L
-char opCB0x15(Boy* gb) {
+OPCode opCB0x15(Boy* gb) {
 
-	return 8;
+	return OPCode(0x15, "RL L", 8, true);
 }
 
 // RL (HL)
-char opCB0x16(Boy* gb) {
+OPCode opCB0x16(Boy* gb) {
 
-	return 16;
+	return OPCode(0x11, "RL (HL)", 16, true);
 }
 
 
@@ -130,51 +131,51 @@ char opCB0x16(Boy* gb) {
 
 
 // RRC A
-char opCB0x0F(Boy* gb) {
+OPCode opCB0x0F(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0F, "RRC A", 8, true);
 }
 
 // RRC B
-char opCB0x08(Boy* gb) {
+OPCode opCB0x08(Boy* gb) {
 
-	return 8;
+	return OPCode(0x08, "RRC B", 8, true);
 }
 
 // RRC C
-char opCB0x09(Boy* gb) {
+OPCode opCB0x09(Boy* gb) {
 
-	return 8;
+	return OPCode(0x09, "RRC C", 8, true);
 }
 
 // RRC D
-char opCB0x0A(Boy* gb) {
+OPCode opCB0x0A(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0A, "RRC D", 8, true);
 }
 
 // RRC E
-char opCB0x0B(Boy* gb) {
+OPCode opCB0x0B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0B, "RRC E", 8, true);
 }
 
 // RRC H
-char opCB0x0C(Boy* gb) {
+OPCode opCB0x0C(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0C, "RRC H", 8, true);
 }
 
 // RRC L
-char opCB0x0D(Boy* gb) {
+OPCode opCB0x0D(Boy* gb) {
 
-	return 8;
+	return OPCode(0x0D, "RRC L", 8, true);
 }
 
 // RRC (HL)
-char opCB0x0E(Boy* gb) {
+OPCode opCB0x0E(Boy* gb) {
 
-	return 16;
+	return OPCode(0x0E, "RRC (HL)", 16, true);
 }
 
 
@@ -182,51 +183,51 @@ char opCB0x0E(Boy* gb) {
 
 
 // RR A
-char opCB0x1F(Boy* gb) {
+OPCode opCB0x1F(Boy* gb) {
 
-	return 8;
+	return OPCode(0x1F, "RR A", 8, true);
 }
 
 // RR B
-char opCB0x18(Boy* gb) {
+OPCode opCB0x18(Boy* gb) {
 
-	return 8;
+	return OPCode(0x18, "RR B", 8, true);
 }
 
 // RR C
-char opCB0x19(Boy* gb) {
+OPCode opCB0x19(Boy* gb) {
 
-	return 8;
+	return OPCode(0x19, "RR C", 8, true);
 }
 
 // RR D
-char opCB0x1A(Boy* gb) {
+OPCode opCB0x1A(Boy* gb) {
 
-	return 8;
+	return OPCode(0x1A, "RR D", 8, true);
 }
 
 // RR E
-char opCB0x1B(Boy* gb) {
+OPCode opCB0x1B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x1B, "RR E", 8, true);
 }
 
 // RR H
-char opCB0x1C(Boy* gb) {
+OPCode opCB0x1C(Boy* gb) {
 
-	return 8;
+	return OPCode(0x1C, "RR H", 8, true);
 }
 
 // RR L
-char opCB0x1D(Boy* gb) {
+OPCode opCB0x1D(Boy* gb) {
 
-	return 8;
+	return OPCode(0x1D, "RR L", 8, true);
 }
 
 // RR (HL)
-char opCB0x1E(Boy* gb) {
+OPCode opCB0x1E(Boy* gb) {
 
-	return 16;
+	return OPCode(0x1E, "RR (HL)", 16, true);
 }
 
 
@@ -236,102 +237,102 @@ char opCB0x1E(Boy* gb) {
 
 
 // SLA A
-char opCB0x27(Boy* gb) {
+OPCode opCB0x27(Boy* gb) {
 
-	return 8;
+	return OPCode(0x27, "SLA A", 8, true);
 }
 
 // SLA B
-char opCB0x20(Boy* gb) {
+OPCode opCB0x20(Boy* gb) {
 
-	return 8;
+	return OPCode(0x20, "SLA B", 8, true);
 }
 
 // SLA C
-char opCB0x21(Boy* gb) {
+OPCode opCB0x21(Boy* gb) {
 
-	return 8;
+	return OPCode(0x21, "SLA C", 8, true);
 }
 
 // SLA D
-char opCB0x22(Boy* gb) {
+OPCode opCB0x22(Boy* gb) {
 
-	return 8;
+	return OPCode(0x22, "SLA D", 8, true);
 }
 
 // SLA E
-char opCB0x23(Boy* gb) {
+OPCode opCB0x23(Boy* gb) {
 
-	return 8;
+	return OPCode(0x23, "SLA E", 8, true);
 }
 
 // SLA H
-char opCB0x24(Boy* gb) {
+OPCode opCB0x24(Boy* gb) {
 
-	return 8;
+	return OPCode(0x24, "SLA H", 8, true);
 }
 
 // SLA L
-char opCB0x25(Boy* gb) {
+OPCode opCB0x25(Boy* gb) {
 
-	return 8;
+	return OPCode(0x25, "SLA L", 8, true);
 }
 
 // SLA (HL)
-char opCB0x26(Boy* gb) {
+OPCode opCB0x26(Boy* gb) {
 
-	return 16;
+	return OPCode(0x26, "SLA (HL)", 16, true);
 }
 
 
 
 
 // SRA A
-char opCB0x2F(Boy* gb) {
+OPCode opCB0x2F(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2F, "SRA A", 8, true);
 }
 
 // SRA B
-char opCB0x28(Boy* gb) {
+OPCode opCB0x28(Boy* gb) {
 
-	return 8;
+	return OPCode(0x28, "SRA B", 8, true);
 }
 
 // SRA C
-char opCB0x29(Boy* gb) {
+OPCode opCB0x29(Boy* gb) {
 
-	return 8;
+	return OPCode(0x29, "SRA C", 8, true);
 }
 
 // SRA D
-char opCB0x2A(Boy* gb) {
+OPCode opCB0x2A(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2A, "SRA D", 8, true);
 }
 
 // SRA E
-char opCB0x2B(Boy* gb) {
+OPCode opCB0x2B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2B, "SRA E", 8, true);
 }
 
 // SRA H
-char opCB0x2C(Boy* gb) {
+OPCode opCB0x2C(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2C, "SRA H", 8, true);
 }
 
 // SRA L
-char opCB0x2D(Boy* gb) {
+OPCode opCB0x2D(Boy* gb) {
 
-	return 8;
+	return OPCode(0x2D, "SRA L", 8, true);
 }
 
 // SRA (HL)
-char opCB0x2E(Boy* gb) {
+OPCode opCB0x2E(Boy* gb) {
 
-	return 16;
+	return OPCode(0x2E, "SRA (HL)", 16, true);
 }
 
 
@@ -339,49 +340,49 @@ char opCB0x2E(Boy* gb) {
 
 
 // SRL A
-char opCB0x3F(Boy* gb) {
+OPCode opCB0x3F(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3F, "SRL A", 8, true);
 }
 
 // SRL B
-char opCB0x38(Boy* gb) {
+OPCode opCB0x38(Boy* gb) {
 
-	return 8;
+	return OPCode(0x38, "SRL B", 8, true);
 }
 
 // SRL C
-char opCB0x39(Boy* gb) {
+OPCode opCB0x39(Boy* gb) {
 
-	return 8;
+	return OPCode(0x39, "SRL C", 8, true);
 }
 
 // SRL D
-char opCB0x3A(Boy* gb) {
+OPCode opCB0x3A(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3A, "SRL D", 8, true);
 }
 
 // SRL E
-char opCB0x3B(Boy* gb) {
+OPCode opCB0x3B(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3B, "SRL E", 8, true);
 }
 
 // SRL H
-char opCB0x3C(Boy* gb) {
+OPCode opCB0x3C(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3C, "SRL H", 8, true);
 }
 
 // SRL L
-char opCB0x3D(Boy* gb) {
+OPCode opCB0x3D(Boy* gb) {
 
-	return 8;
+	return OPCode(0x3D, "SRL L", 8, true);
 }
 
 // SRL (HL)
-char opCB0x3E(Boy* gb) {
+OPCode opCB0x3E(Boy* gb) {
 
-	return 16;
+	return OPCode(0x3E, "SRL (HL)", 16, true);
 }

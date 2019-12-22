@@ -6,14 +6,15 @@ void Boy::init(int w, int h){
 	this->title = "TheGB";
 	this->w = w;
 	this->h = h;
+	populateCodes();
 }
 
 void Boy::powerUp() {
-	//SDL_Init(SDL_INIT_EVERYTHING);
-	//this->window = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->w, this->h, SDL_WINDOW_SHOWN);
-	//this->renderer = SDL_CreateRenderer(this->window, -1, 0);
+	SDL_Init(SDL_INIT_EVERYTHING);
+	this->window = SDL_CreateWindow(this->title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, this->w, this->h, SDL_WINDOW_SHOWN);
+	this->renderer = SDL_CreateRenderer(this->window, -1, 0);
 
-	//SDL_RenderPresent(this->renderer);
+	SDL_RenderPresent(this->renderer);
 
 	memset(this->RAM_BANK1, 0, sizeof(this->RAM_BANK1));
 	memset(this->RAM_BANK2, 0, sizeof(this->RAM_BANK2));
@@ -22,26 +23,21 @@ void Boy::powerUp() {
 	this->pc = 0x0FF;
 	this->sp = 0xFFFE;
 
+
 	this->loop();
 }
 
 void Boy::loop() {
-	//while (this->running) {
-	//	//double startFrame = getCurrentTime();
-	//	this->tick();
-	//	
-	//}
 	for (int i = 0; i < 20; i++) {
-		uint8_t instruction = this->getNextInstruction(false);
 		this->tick();
 	}
 }
 
 void Boy::tick() {
 	uint8_t instruction = this->getNextInstruction(false);
-	//printf("Exec: 0x%02x\n", instruction);
-	executeCode(this, instruction);
 	this->incrementPC();
+	printHex(instruction);
+	executeCode(this, instruction);
 }
 
 void Boy::handleKey(SDL_KeyboardEvent e) {
@@ -70,7 +66,8 @@ void Boy::loadCartridge(const char* cartPath) {
 	Cartridge *c;
 	c = new Cartridge(cartPath);
 	this->cartridge = c;
-	this->startCartridge();
+	bool started = this->startCartridge();
+	cout << started << endl;
 }
 
 bool Boy::startCartridge() {
@@ -78,10 +75,10 @@ bool Boy::startCartridge() {
 	this->cartridge->read();
 
 	bool headerCheck = this->cartridge->checkHeaderChecksum();
-	if (!headerCheck) return false;
+	//if (!headerCheck) return false;
 
 	bool globalCheck = this->cartridge->checkGlobalChecksum();
-	if (!globalCheck) return false;
+	//if (!globalCheck) return false;
 
 	printf("Showing window...\n");
 	this->running = true;
@@ -107,7 +104,7 @@ uint16_t Boy::getNextInstructionPair(bool increment) {
 	uint8_t lbyte = this->cartridge->getAddress(dir);
 	if (increment) this->pc = dir;
 
-	return joinBytes16(hbyte, lbyte);
+	return joinBytes16(lbyte, hbyte);
 }
 
 uint16_t Boy::getNextInstructionPair() {
