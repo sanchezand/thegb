@@ -91,11 +91,13 @@ OPCode op0x10(Boy* gb) {
 
 // DI
 OPCode op0xF3(Boy* gb) {
+	gb->setInterrupts(false);
 	return OPCode(0xF3, "DI", 4);
 }
 
 // EI
 OPCode op0xFB(Boy* gb) {
+	gb->setInterrupts(true);
 	return OPCode(0xFB, "EI", 4);
 }
 

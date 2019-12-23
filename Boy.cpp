@@ -33,6 +33,13 @@ void Boy::loop() {
 	}
 }
 
+void Boy::clearFlags() {
+	this->setFlag(FLAG_N, false);
+	this->setFlag(FLAG_Z, false);
+	this->setFlag(FLAG_H, false);
+	this->setFlag(FLAG_C, false);
+}
+
 void Boy::tick() {
 	uint8_t instruction = this->getNextInstruction(false);
 	this->incrementPC();
@@ -472,4 +479,8 @@ void Boy::pushStack(Register r) {
 
 void Boy::popStack(Register r) {
 
+}
+
+void Boy::setInterrupts(bool state) {
+	this->interrupts = state;
 }

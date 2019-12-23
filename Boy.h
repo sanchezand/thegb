@@ -13,7 +13,7 @@ enum Register {
 
 class Boy {
 private:
-	bool running;
+	bool running, interrupts;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	const char* title;
@@ -39,6 +39,7 @@ public:
 	bool startCartridge();
 	void powerUp();
 	void loop();
+	void clearFlags();
 	bool getFlag(Flag f);
 	void setFlag(Flag f, bool set);
 	uint8_t getAddress(uint16_t dir);
@@ -75,4 +76,6 @@ public:
 	void setAddress(int dir, uint8_t val);
 	void setAddressPair(uint16_t dir, uint16_t val);
 	void setAddressRam(int dir, uint8_t val);
+
+	void setInterrupts(bool state);
 };
