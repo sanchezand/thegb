@@ -1,7 +1,11 @@
 #include "OPCodes.h"
 
 void addHL(Boy* gb, uint16_t n) {
-	
+	uint16_t res = gb->getRegisterPair(REG_HL) + n;
+	gb->setFlag(FLAG_N, false);
+	gb->setFlag(FLAG_C, res & 0x10000);
+	gb->setFlag(FLAG_H, (gb->getRegisterPair(REG_HL) ^ n ^ (res & 0xFFFF)) & 0x1000);
+	gb->setRegisterPair(REG_HL, res);
 }
 
 // ADD HL, BC
@@ -46,27 +50,27 @@ OPCode op0xE8(Boy* gb) {
 
 // INC BC
 OPCode op0x03(Boy* gb) {
-
+	gb->setRegisterPair(REG_BC, gb->getRegisterPair(REG_BC) + 1);
 	return OPCode(0x03, "INC BC", 8);
 }
 
 // INC DE
 OPCode op0x13(Boy* gb) {
-
+	gb->setRegisterPair(REG_DE, gb->getRegisterPair(REG_DE) + 1);
 	return OPCode(0x13, "INC DE", 8);
 }
 
 
 // INC HL
 OPCode op0x23(Boy* gb) {
-
+	gb->setRegisterPair(REG_HL, gb->getRegisterPair(REG_HL) + 1);
 	return OPCode(0x23, "INC HL", 8);
 }
 
 
 // INC SP
 OPCode op0x33(Boy* gb) {
-
+	gb->setSP(gb->getSP() + 1);
 	return OPCode(0x33, "INC SP", 8);
 }
 
@@ -75,26 +79,26 @@ OPCode op0x33(Boy* gb) {
 
 // DEC BC
 OPCode op0x0B(Boy* gb) {
-
+	gb->setRegisterPair(REG_BC, gb->getRegisterPair(REG_BC) - 1);
 	return OPCode(0x0B, "DEC BC", 8);
 }
 
 // DEC DE
 OPCode op0x1B(Boy* gb) {
-
+	gb->setRegisterPair(REG_DE, gb->getRegisterPair(REG_DE) - 1);
 	return OPCode(0x03, "DEC BC", 8);
 }
 
 
 // DEC HL
 OPCode op0x2B(Boy* gb) {
-
+	gb->setRegisterPair(REG_HL, gb->getRegisterPair(REG_HL) - 1);
 	return OPCode(0x2B, "DEC HL", 8);
 }
 
 
 // DEC SP
 OPCode op0x3B(Boy* gb) {
-
+	gb->setSP(gb->getSP() - 1);
 	return OPCode(0x3B, "DEC SP", 8);
 }

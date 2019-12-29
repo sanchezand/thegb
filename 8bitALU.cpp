@@ -114,6 +114,9 @@ void op_dec(Boy* gb, Register reg) {
 
 
 
+
+
+
 // ADD A, A
 OPCode op0x87(Boy* gb) {
 	op_add(gb, gb->getRegister(REG_A));

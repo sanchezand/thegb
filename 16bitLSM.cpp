@@ -62,24 +62,25 @@ OPCode op0x08(Boy* gb) {
 
 // PUSH AF
 OPCode op0xF5(Boy* gb) {
-
+	gb->pushStack(gb->getRegisterPair(REG_AF));
 	return OPCode(0xF5, "PUSH AF", 16);
 }
 
 // PUSH BC
 OPCode op0xC5(Boy* gb) {
-
+	gb->pushStack(gb->getRegisterPair(REG_BC));
 	return OPCode(0xC5, "PUSH BC", 16);
 }
 
 // PUSH DE
 OPCode op0xD5(Boy* gb) {
+	gb->pushStack(gb->getRegisterPair(REG_DE));
 	return OPCode(0xD5, "PUSH DE", 16);
 }
 
 // PUSH HL
 OPCode op0xE5(Boy* gb) {
-
+	gb->pushStack(gb->getRegisterPair(REG_HL));
 	return OPCode(0xE5, "PUSH HL", 16);
 }
 
@@ -87,24 +88,24 @@ OPCode op0xE5(Boy* gb) {
 
 // POP AF
 OPCode op0xF1(Boy* gb) {
-
+	gb->setRegisterPair(REG_AF, gb->popStack16());
 	return OPCode(0xF1, "POP AF", 12);
 }
 
 // POP BC
 OPCode op0xC1(Boy* gb) {
-
+	gb->setRegisterPair(REG_BC, gb->popStack16());
 	return OPCode(0xC1, "POP BC", 12);
 }
 
 // POP DE
 OPCode op0xD1(Boy* gb) {
-
+	gb->setRegisterPair(REG_DE, gb->popStack16());
 	return OPCode(0xD1, "POP DE", 12);
 }
 
 // POP HL
 OPCode op0xE1(Boy* gb) {
-
+	gb->setRegisterPair(REG_HL, gb->popStack16());
 	return OPCode(0xE1, "POP HL", 12);
 }

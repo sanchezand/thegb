@@ -4,7 +4,6 @@
 OPCode op0xC3(Boy* gb) {
 	uint16_t nn = gb->getNextInstructionPair();
 	gb->jumpPC(nn-1);
-	printf("Jumped to: 0x%04x\n", nn);
 	return OPCode(0xC3, "JP nn", 12);
 }
 
