@@ -1,13 +1,28 @@
 #include "OPCodes.h"
 
+void op_rlc(Boy* gb, Register r) {
+	uint8_t val = gb->getRegister(r);
+	val <<= 1;
+
+	if ((val & 0x80) != 0) {
+		gb->setFlag(FLAG_C, true);
+		val |= 0x1;
+	}else{
+		gb->clearFlags();
+	}
+	gb->setRegister(r, val); 
+
+}
+
 // RLCA
 OPCode op0x07(Boy* gb) {
-
+	op_rlc(gb, REG_A);
 	return OPCode(0x07, "RLCA", 4);
 }
 
 // RLA
 OPCode op0x17(Boy* gb) {
+
 	return OPCode(0x17, "RLA", 4);
 }
 
