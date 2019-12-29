@@ -135,12 +135,9 @@ uint8_t Boy::getAddress(uint16_t dir) {
 	else if(0xA000 <= dir && dir <= 0xBFFF){ // 8KB EXTERNAL RAM (CARTRIDGE)
 		printf("Address 0x%04x not mapped\n", dir);
 	} 
-	else if (0xC000 <= dir && dir <= 0xCFFF) { // 4KB INTERNAL RAM BANK 0
-		return this->getAddressRam(dir, true);
-	} 
-	else if (0xD000 <= dir && dir <= 0xDFFF) { // 4KB INTERNAL RAM BANK 1
-		return this->getAddressRam(dir, true);
-	} 
+	else if (0xC000 <= dir && dir <= 0xDFFF) { // 8KB INTERNAL RAM BANKS
+		return this->getAddressRam(dir - 0xC000);
+	}
 	else if (0xE000 <= dir && dir <= 0xFDFF) { // ECHO WRAM
 		return this->getAddress(dir - 0x2000);
 	} 
@@ -154,13 +151,12 @@ uint8_t Boy::getAddress(uint16_t dir) {
 		printf("Address 0x%04x not mapped\n", dir);
 	} 
 	else if (0xFF80 <= dir && dir <= 0xFFFE) { // HIGH RAM
-		printf("Address 0x%04x not mapped\n", dir);
+		return this->getAddressRam(((0x1000) - (0xFFFE - dir)) - 1);
 	} 
 	else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
 		printf("Address 0x%04x not mapped\n", dir);
 	}
 
-	printf("IVNALID ADDRESS - 0x%04x\n", dir);
 	return 0;
 }
 
@@ -184,7 +180,7 @@ void Boy::setAddress(int dir, uint8_t val) {
 		printf("WRITE: Address 0x%04x not mapped\n", dir);
 	}
 	else if (0xFF80 <= dir && dir <= 0xFFFE) { // HIGH RAM
-		printf("WRITE: Address 0x%04x not mapped\n", dir);
+		this->setAddressRam(((0x1000) - (0xFFFE - dir)) - 1, val);
 	}
 	else if (dir == 0xFFFF) { // INTERRUPT ENABLE REGISTER
 		printf("WRITE: Address 0x%04x not mapped\n", dir);
@@ -237,6 +233,7 @@ bool Boy::getFlag(Flag f) {
 	case FLAG_N: return (this->status) >> 6 & 1;
 	case FLAG_H: return (this->status) >> 5 & 1;
 	case FLAG_C: return (this->status) >> 4 & 1;
+	case FLAG_SUB: return (this->status) >> 3 & 1;
 	default: return 0;
 	}
 }
@@ -366,10 +363,7 @@ uint16_t Boy::getRegisterPair(Register r) {
 	return hbyte << 8 | lbyte;
 }
 
-uint8_t Boy::getAddressRam(uint16_t dir, bool bus) {
-	if (bus) {
-		dir = dir - 0xC000;
-	}
+uint8_t Boy::getAddressRam(uint16_t dir) {
 	if (dir > 0x1000) return this->RAM_BANK1[dir];
 	else return this->RAM_BANK2[dir - 0x1000];
 }
@@ -473,14 +467,70 @@ void Boy::loadNextPairToRegister(Register r) {
 	this->setRegisterPair(r, nn);
 }
 
-void Boy::pushStack(Register r) {
 
+
+
+// ==================
+// ==== STACK ACTIONS
+// ==================
+
+void Boy::pushStack(uint8_t push) {
+	this->setAddress(this->sp, push);
+	if (this->sp > 0xFFFE) return;
+	printf("PUSHING: %02x => %02x\n", sp, push);
+	this->setSP(this->sp - 1);
 }
 
-void Boy::popStack(Register r) {
-
+void Boy::pushStack(uint16_t push) {
+	uint8_t* b = separateBytes(push);
+	this->pushStack(b[0]);
+	this->pushStack(b[1]);
 }
+
+uint8_t Boy::popStack() {
+	uint16_t sp = this->sp;
+	if (this->sp < 0xFFFE) {
+		sp += 1;
+		this->setSP(sp);
+	}
+	uint8_t val = this->getAddress(sp);
+	//printf("POPPING: %02x /= %02x\n", sp, val);
+	this->setAddress(sp, 0x00);
+	return val;
+}
+
+uint16_t Boy::popStack16() {
+	uint8_t l = this->popStack();
+	uint8_t h = this->popStack();
+
+	return joinBytes16(h, l);
+}
+
+uint8_t Boy::stackTop() {
+	return this->getAddress(this->sp >= 0xFFFE ? 0xFFFE : this->sp + 1);
+}
+
+uint16_t Boy::stackTop16() {
+	return uint16_t();
+}
+
+
+
+
+
 
 void Boy::setInterrupts(bool state) {
 	this->interrupts = state;
+}
+
+void Boy::setHalt(bool h) {
+	this->halt = h;
+}
+
+void Boy::setDisplay(bool d) {
+	this->display = d;
+}
+
+void Boy::setStop(bool s) {
+	this->stop = s;
 }

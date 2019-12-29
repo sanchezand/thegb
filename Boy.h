@@ -4,7 +4,7 @@
 #include "Cartridge.h"
 
 enum Flag {
-	FLAG_Z, FLAG_N, FLAG_H, FLAG_C
+	FLAG_Z, FLAG_N, FLAG_H, FLAG_C, FLAG_SUB
 };
 
 enum Register {
@@ -13,7 +13,7 @@ enum Register {
 
 class Boy {
 private:
-	bool running, interrupts;
+	bool running, interrupts, halt, display, stop;
 	SDL_Window *window;
 	SDL_Renderer *renderer;
 	const char* title;
@@ -21,7 +21,7 @@ private:
 	uint8_t status;
 	uint8_t A, F, B, C, D, E, H, L;
 	uint16_t pc = 0x100;
-	uint16_t sp;
+	uint16_t sp = 0xFFFE;
 	uint8_t* getRegisterDir(Register r);
 	Cartridge *cartridge;
 
@@ -66,16 +66,23 @@ public:
 	void loadNextToRegister(Register r);
 	void loadNextPairToRegister(Register r);
 
-	void pushStack(Register r);
-	void popStack(Register r);
+	void pushStack(uint8_t push);
+	void pushStack(uint16_t push);
+	uint8_t stackTop();
+	uint16_t stackTop16();
+	uint8_t popStack();
+	uint16_t popStack16();
 
 	void setSP(uint16_t sp);
 	uint16_t getSP();
 	uint16_t jumpPC(uint16_t pc);
-	uint8_t getAddressRam(uint16_t dir, bool bus);
+	uint8_t getAddressRam(uint16_t dir);
 	void setAddress(int dir, uint8_t val);
 	void setAddressPair(uint16_t dir, uint16_t val);
 	void setAddressRam(int dir, uint8_t val);
 
 	void setInterrupts(bool state);
+	void setHalt(bool h);
+	void setDisplay(bool d);
+	void setStop(bool s);
 };
